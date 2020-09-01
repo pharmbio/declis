@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Samples of Sequencing Run {{ seq.id }} of Project {{ seq.proj }}</h1>
+    
+    <nav aria-label="...">
+      <ul class="pager">
+          <li class="previous{% if not seq_prev %} disabled{% endif %}">
+              {% if seq_prev %}
+                  <a href="{{ "/seq/{}".format(seq_prev) }}">
+              {% else %}
+                  <a href="{{ "/seq/{}".format(seq.id) }}">
+              {% endif %}
+                  <span aria-hidden="true">&larr;</span> {{ 'Previous Seq' }}
+              </a>
+          </li>
+          <li><a href="{{ "/sequencing" }}">Back</a></li>
+          <li class="next{% if not seq_next %} disabled{% endif %}">
+              {% if seq_next %}
+                  <a href="{{ "/seq/{}".format(seq_next) }}">
+              {% else %}
+                  <a href="{{ "/seq/{}".format(seq_id) }}">
+              {% endif %}
+                  {{ 'Next Seq' }} <span aria-hidden="true">&rarr;</span>
+              </a>
+          </li>
+      </ul>
+  </nav>
+    
+    <table width="80%">
+      <tr>
+        <th>name</th>
+        <th>protein, uM</th>
+        <th>lib, pmol</th>
+        <th>beed type</th>
+        <th>beed, ul</th>
+        <th>washes</th>
+        <th>spike</th>
+        <th>conditions</th>
+      </tr>
+      {% for sample in samples %}
+        <tr>
+          <td><a href="{{ "/sample/{}".format(sample.id) }}">{{ sample.name }}</a></td>
+          <td>{{ sample.protein_umol }}</td>
+          <td>{{ sample.lib_pmol }}</td>
+          <td>{{ sample.bead_type }}</td>
+          <td>{{ sample.bead_ul }}</td>
+          <td>{{ sample.washes }}</td>
+          <td>{{ sample.spike }}</td>
+          <td>{{ sample.special }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <br>
+    <a href="{{ "/seq/{}/all".format(seq.id) }}">Show All</a>
+{% endblock %}

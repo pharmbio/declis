@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Details for Sample {{ sample.name }} of Sequencing Run {{ seq.id }} of Project {{ seq.proj }}</h1>
+
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not sam_prev %} disabled{% endif %}">
+                {% if sam_prev %}
+                    <a href="{{ "/sample/{}".format(sam_prev) }}">
+                {% else %}
+                    <a href="{{ "/sample/{}".format(sample.id) }}">
+                {% endif %}
+                    <span aria-hidden="true">&larr;</span> {{ 'Previous Sample' }}
+                </a>
+            </li>
+            <li><a href="{{ "/seq/{}".format(seq.id) }}">Back</a></li>
+            <li class="next{% if not sam_next %} disabled{% endif %}">
+                {% if sam_next %}
+                    <a href="{{ "/sample/{}".format(sam_next) }}">
+                {% else %}
+                    <a href="{{ "/sample/{}".format(sample_id) }}">
+                {% endif %}
+                    {{ 'Next Sample' }} <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <table width="80%">
+      <tr>
+        <th>protein, uM</th>
+        <th>lib, pmol</th>
+        <th>beed type</th>
+        <th>beed, ul</th>
+        <th>washes</th>
+        <th>spike</th>
+        <th>conditions</th>
+        <th>Download</th>
+      </tr>
+      <tr>
+        <td>{{ sample.protein_umol }}</td>
+        <td>{{ sample.lib_pmol }}</td>
+        <td>{{ sample.bead_type }}</td>
+        <td>{{ sample.bead_ul }}</td>
+        <td>{{ sample.washes }}</td>
+        <td>{{ sample.spike }}</td>
+        <td>{{ sample.special }}</td>
+        <td><a href="{{ "/static/raw/{}/{}.txt".format(seq.id, sample.name) }}"
+          download="{{ "d{:03d}_{}".format(seq.id, sample.name) }}">{{ sample.name }}</a></td>
+      </tr>
+    </table>
+    <br>
+    {% include '_img_pair.html' %}
+    {% if enrich_top.count() %}
+    <table width="100%">
+      <tr valign="top">
+        <td><img src="{{ "/static/enrich/{}/{}.png".format(seq.id, sample.name) }}"></td>
+        <td>
+          <!-- <span>Top Hits</span>
+          <table width="100%" border=1>
+            <tr>
+              <th>bb1</th>
+              <th>bb2</th>
+              <th>bb3</th>
+              <th>enrichment</th>
+            </tr>
+            {% for hit in enrich_top %}
+              <tr>
+                <td>{{ hit.b1 }}</td>
+                <td>{{ hit.b2 }}</td>
+                <td>{{ hit.b3 }}</td>
+                <td>{{ '{:.2f}'.format(hit.enrich) }}</td>
+              </tr>
+            {% endfor %}
+          </table> -->
+          <img src="{{ "/static/enrich2/{}/{}.png".format(seq.id, sample.name) }}">
+        </td>
+      </tr>
+    </table>
+    <br>
+    {% endif %}
+    <table width="100%" border=1>
+      {% for hit in enrich_top %}
+      <tr>
+        <td>
+          {{ 'Hit: {} {} {}'.format(hit.b1,hit.b2,hit.b3) }}
+          <br>
+          {{ 'Enrichment {:.2f}'.format(hit.enrich) }}
+        </td>
+        <td><img src="{{ "/static/chem/{}_{}_{}.png".format(hit.b1,hit.b2,hit.b3) }}"></td>
+      </tr>
+      {% endfor %}
+    </table>
+{% endblock %}

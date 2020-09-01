@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Sequencing Runs</h1>
+    <table width="70%">
+      <tr>
+        <th>Details</th>
+        <th>Project</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+      {% for seq in seqs %}
+      <tr>
+        <td><a href="{{ "/seq/" ~ seq.id }}">{{ seq.id }}</a></td>
+        <td>{{ seq.proj }}</td>
+        <td>{{ seq.status }}</td>
+        <td>{{ seq.date }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+{% endblock %}

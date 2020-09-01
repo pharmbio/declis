@@ -1,0 +1,31 @@
+version: "2.4"
+networks:
+  # declis-net:
+  #   external:
+  #     name: declis-net
+  traefik_web:
+    external:
+      name: traefik_web
+services:
+  declisweb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: declis
+    ports:
+      - 5000:5008
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_web"
+      - "traefik.port=5008"
+      - "traefik.http.routers.declisweb.rule=Host(`declis.devserver.pharmb.io`)"
+      - "traefik.http.routers.declisweb.entrypoints=websecure"
+      - "traefik.http.routers.declisweb.tls.certresolver=myresolver"
+    networks:
+      # - declis-net
+      - traefik_web
+    volumes:
+      - ../remote/app/static:/home/declis/app/static:rw
+      - ../remote/data:/home/declis/data:rw
+      # - ./app:/home/declis/app

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>DECLIS Portal</h1>
+    <br>
+    <p>Introductory exposition ...</p>
+
+    <br><h3>View Results</h3>
+    <ul>
+      <li><a href="/sequencing">Browse Results</a></li>
+      <li><a href="/search">Find Results</a></li>
+      <li><a href="/chem">Chemical Structure</a></li>
+      <li><a href="/chems">Chemical Structures</a></li>
+    </ul><br>
+
+    <br><h3>Upload Data</h3>
+    <ul>
+      <li><a href="/reg/libreg">Define Library</a></li>
+      <li><a href="/reg/samreg">Define Samples</a></li>
+      <li><a href="/library">Process Sequencing Data</a></li>
+    </ul><br>
+
+    <br><h3>General Parameters</h3>
+    <ul>
+      <li><a href="/library">Targets</a></li>
+      <li><a href="/library">Building Blocks</a></li>
+      <li><a href="/library">Barcodes</a></li>
+      <li><a href="/library">Primers and Tags</a></li>
+    </ul><br>
+    <ul><br>
+{% endblock %}
