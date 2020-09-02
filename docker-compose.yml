@@ -26,8 +26,10 @@ services:
       # - declis-net
       - traefik_web
     volumes:
-      - ../remote/app/static:/home/declis/app/static:rw
+      - ../remote/static:/home/declis/app/static:ro
       - ../remote/data:/home/declis/data:rw
       # - ./app:/home/declis/app
       - ./:/home/declis
-  
+
+# docker run -it --rm -i -v ${HOME}/declis/remote/static:/static \
+# -w /static -u ${UID}:33 mcs07/rdkit:latest /bin/bash
