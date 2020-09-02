@@ -8,6 +8,7 @@ networks:
       name: traefik_web
 services:
   declisweb:
+    user: "1016:33"
     build:
       context: .
       dockerfile: Dockerfile
