@@ -29,3 +29,5 @@ services:
       - ../remote/app/static:/home/declis/app/static:rw
       - ../remote/data:/home/declis/data:rw
       # - ./app:/home/declis/app
+      - ./:/home/declis
+  

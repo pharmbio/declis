@@ -1,6 +1,7 @@
 FROM python:3.7-buster
 
-RUN groupadd -r declis && useradd -r -g declis declis
+# RUN groupadd -r declis && useradd -r -g declis declis
+RUN groupadd -g 1016 declis && useradd -u 1016 -g declis declis
 
 WORKDIR /home/declis
 
@@ -12,7 +13,7 @@ RUN pip3 install --no-cache-dir gunicorn
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY app app
-COPY data data
+# COPY data data
 # COPY migrations migrations
 # COPY app.db app.db
 COPY declis.py config.py ./
