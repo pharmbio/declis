@@ -97,3 +97,9 @@ class Products(db.Model):
     b3 = db.Column(db.Integer)
     smi = db.Column(db.String(256))
     note = db.Column(db.String(256))
+
+
+class Rod(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    prot = db.Column(db.Integer, db.ForeignKey('sample.id'))
+    sans = db.Column(db.Integer, db.ForeignKey('sample.id'))

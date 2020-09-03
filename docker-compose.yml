@@ -14,12 +14,12 @@ services:
       dockerfile: Dockerfile
     container_name: declis
     ports:
-      - 5000:5008
+      - 5011:5011
     restart: always
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik_web"
-      - "traefik.port=5008"
+      - "traefik.port=5011"
       - "traefik.http.routers.declisweb.rule=Host(`declis.devserver.pharmb.io`)"
       - "traefik.http.routers.declisweb.entrypoints=websecure"
       - "traefik.http.routers.declisweb.tls.certresolver=myresolver"

@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import db
-from app.reg.forms import LibraryForm, SampleForm, SequencingForm
+from app.reg.forms import LibraryForm, SampleForm, SequencingForm, RodForm
 from app.models import User, Lib, Seq, Sample
 from app.reg import bp
 
@@ -14,6 +14,17 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+
+
+@bp.route('/pairs', methods=['GET', 'POST'])
+def rod_reg():
+    form = RodForm()
+    if form.validate_on_submit():
+        # do something here
+        flash('ROD pairs defined')
+        return redirect(url_for('index'))
+    return render_template('rod_reg.html', 
+        title='Register sample pairs for ROD calculations', form=form)
 
 
 @bp.route('/libreg', methods=['GET', 'POST'])

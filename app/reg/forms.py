@@ -1,12 +1,15 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
-from app.models import User
+from app.models import User, Rod
 
 
 class EmptyForm(FlaskForm):
     submit = SubmitField('Submit')
 
+
+class RodForm(FlaskForm):
+    submit = SubmitField('Submit')
 
 class SequencingForm(FlaskForm):
     project = StringField('Project', validators=[DataRequired()])

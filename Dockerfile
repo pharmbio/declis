@@ -16,6 +16,6 @@ ENV FLASK_APP declis.py
 RUN chown -R declis:www-data ./
 USER declis
 
-EXPOSE 5000
-ENV GUNICORN_CMD_ARGS "-b :5000 --reload --forwarded-allow-ips='*' --access-logfile - --error-logfile -"
+EXPOSE 5011
+ENV GUNICORN_CMD_ARGS "-b :5011 --forwarded-allow-ips='*' --access-logfile - --error-logfile -"
 CMD ["gunicorn", "declis:app"]
