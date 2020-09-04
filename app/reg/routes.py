@@ -19,12 +19,29 @@ def before_request():
 @bp.route('/pairs', methods=['GET', 'POST'])
 def rod_reg():
     form = RodForm()
+    seqs = Seq.query.all()
+    menu = []
+    for seq in seqs:
+        menu.append((seq.id, "D{:02} {}".format(seq.id, seq.proj)))
+    form.projects.choices = [(0,"select a project")] + menu
     if form.validate_on_submit():
-        # do something here
-        flash('ROD pairs defined')
-        return redirect(url_for('index'))
-    return render_template('rod_reg.html', 
-        title='Register sample pairs for ROD calculations', form=form)
+        seq = Seq.query.filter_by(id=form.projects.data).first_or_404()
+        pairs = []
+        a, b = '',''
+        for line in form.vics.data:
+            line = line.strip()
+            if a and b and not line:
+                pairs.append((a, b))
+                a, b = '', ''
+            elif a and line:
+                b = line
+            elif line:
+                a = line
+        return render_template('rod_select.html', 
+        title='Register sample pairs for ROD', form=form, seq=seq, pairs=pairs, dat=form.seq.vics)
+    return render_template('rod_select.html', 
+        title='Register sample pairs for ROD', form=form)
+    # flash('ROD pairs defined')
 
 
 @bp.route('/libreg', methods=['GET', 'POST'])

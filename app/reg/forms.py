@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import User, Rod
 
@@ -9,7 +9,10 @@ class EmptyForm(FlaskForm):
 
 
 class RodForm(FlaskForm):
+    projects = SelectField('Project', coerce=int)
+    vics = TextAreaField('ROD Pairs', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
 
 class SequencingForm(FlaskForm):
     project = StringField('Project', validators=[DataRequired()])

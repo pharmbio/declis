@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>Select Sample Pairs</h1>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+    <hr>
+    {% if seq %}
+        {{ seq.proj }}
+    {% endif %}
+    {% for p in pairs %}
+        {{ "prot {} and sans {}".format(p[0],p[1]) }}
+    {% endfor %}
+    {% if dat %}
+        {{ dat }}
+    {% endif %}
+{% endblock %}
