@@ -9,13 +9,10 @@
         </div>
     </div>
     <hr>
-    {% if seq %}
-        {{ seq.proj }}
+    {% if proj %}
+        <p>{{ "Proj = {}".format(proj.proj)}}</p>
     {% endif %}
     {% for p in pairs %}
-        {{ "prot {} and sans {}".format(p[0],p[1]) }}
-    {% endfor %}
-    {% if dat %}
-        {{ dat }}
-    {% endif %}
+        <br>{{ "prot {} and sans {}".format(p[0],p[1]) }}
+    {% endfor %}}
 {% endblock %}

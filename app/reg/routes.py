@@ -23,9 +23,9 @@ def rod_reg():
     menu = []
     for seq in seqs:
         menu.append((seq.id, "D{:02} {}".format(seq.id, seq.proj)))
-    form.projects.choices = [(0,"select a project")] + menu
+    form.proj.choices = [(0,"select a project")] + menu
     if form.validate_on_submit():
-        seq = Seq.query.filter_by(id=form.projects.data).first_or_404()
+        proj = Seq.query.filter_by(id=form.proj.data).first_or_404()
         pairs = []
         a, b = '',''
         for line in form.vics.data:
@@ -37,8 +37,10 @@ def rod_reg():
                 b = line
             elif line:
                 a = line
-        return render_template('rod_select.html', 
-        title='Register sample pairs for ROD', form=form, seq=seq, pairs=pairs, dat=form.seq.vics)
+        if a and b: pairs.append((a, b))
+        return render_template('rod_select.html', \
+            title='Register sample pairs for ROD', form=form, proj=proj, pairs=pairs, \
+            dat=form.vics.data)
     return render_template('rod_select.html', 
         title='Register sample pairs for ROD', form=form)
     # flash('ROD pairs defined')

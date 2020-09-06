@@ -9,8 +9,9 @@ class EmptyForm(FlaskForm):
 
 
 class RodForm(FlaskForm):
-    projects = SelectField('Project', coerce=int)
-    vics = TextAreaField('ROD Pairs', validators=[DataRequired()])
+    proj  = SelectField('Project', coerce=int)
+    vics  = TextAreaField('ROD Pairs', validators=[DataRequired()], \
+        render_kw={'class': 'form-control', 'rows': 15})
     submit = SubmitField('Submit')
 
 
