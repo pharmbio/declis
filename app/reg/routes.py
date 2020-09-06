@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import db
-from app.reg.forms import LibraryForm, SampleForm, SequencingForm, RodForm
+from app.reg.forms import EmptyForm, LibraryForm, SampleForm, SequencingForm, RodForm
 from app.models import User, Lib, Seq, Sample
 from app.reg import bp
 
@@ -14,6 +14,19 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+
+
+@bp.route('/rod_check', methods=['GET', 'POST'])
+def rod_chk(proj, pairs):
+    form = EmptyForm()
+    proj = Seq.query.filter_by(id=proj).first_or_404()
+    curr = Rod.query.all()
+    sams = Sample.query.filter_by(seq_id=proj.id).all()
+    if form.validate_on_submit():
+        flash('ROD pairs defined')
+        return redirect(url_for('main.index'))
+    return render_template('rod_check.html', title='Confirm sample pairs for ROD', \
+        form=form, proj=proj, pairs=pairs, curr=curr, sams=sams)
 
 
 @bp.route('/pairs', methods=['GET', 'POST'])
@@ -38,9 +51,9 @@ def rod_reg():
             elif line:
                 a = line
         if a and b: pairs.append((a, b))
-        return render_template('rod_select.html', \
-            title='Register sample pairs for ROD', form=form, proj=proj, pairs=pairs, \
-            dat=form.vics.data)
+        # return redirect(url_for('reg.pairs_check', proj=proj, pairs=pairs))
+        return render_template('rod_check.html', \
+             title='Register sample pairs for ROD', form=form, proj=proj, pairs=pairs)
     return render_template('rod_select.html', 
         title='Register sample pairs for ROD', form=form)
     # flash('ROD pairs defined')
