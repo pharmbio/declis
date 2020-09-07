@@ -5,3 +5,6 @@ logs/
 .DS_Store
 .vscode/
 .bash_history
+data/
+app/static
+cli/

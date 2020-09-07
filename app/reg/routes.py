@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import db
 from app.reg.forms import EmptyForm, LibraryForm, SampleForm, SequencingForm, RodForm
-from app.models import User, Lib, Seq, Sample
+from app.models import User, Lib, Seq, Sample, Rod
 from app.reg import bp
 
 #admin_permission = Permission(RoleNeed('admin'))
@@ -39,24 +39,46 @@ def rod_reg():
     form.proj.choices = [(0,"select a project")] + menu
     if form.validate_on_submit():
         proj = Seq.query.filter_by(id=form.proj.data).first_or_404()
-        pairs = []
-        a, b = '',''
-        for line in form.vics.data:
-            line = line.strip()
-            if a and b and not line:
-                pairs.append((a, b))
-                a, b = '', ''
-            elif a and line:
-                b = line
-            elif line:
-                a = line
-        if a and b: pairs.append((a, b))
-        # return redirect(url_for('reg.pairs_check', proj=proj, pairs=pairs))
-        return render_template('rod_check.html', \
-             title='Register sample pairs for ROD', form=form, proj=proj, pairs=pairs)
+        pairs = rod_serial(proj, form.vics.data)
+        junk = rod_curr(pairs)
+        return render_template('rod_check.html', title='Register sample pairs for ROD', \
+            form=form, proj=proj, pairs=pairs, dat=form.vics.data, junk=junk)
     return render_template('rod_select.html', 
         title='Register sample pairs for ROD', form=form)
     # flash('ROD pairs defined')
+
+def rod_serial(proj, dat):
+    sams = Sample.query.with_entities(Sample.name, Sample.id).filter_by(seq_id=proj.id).all()
+    sams = dict(sams)
+
+    a, b, pairs = '', '', []
+    dat = dat.splitlines()
+    for line in dat:
+        line = line.strip()
+        if a and b and not line:
+            pairs.append((a, b))
+            a, b = '', ''
+        elif a and line:
+            b = (sams.get(line, -1), line)
+        elif line:
+            a = (sams.get(line, -1), line)
+    if a and b: pairs.append((a, b))
+    return pairs
+
+def rod_curr(pairs):
+    curr = Rod.query.with_entities(Rod.prot).all()
+    curr = [x[0] for x in curr]
+    junk = []
+    for q in pairs:
+        if q[0][0] == -1 or q[1][0] == -1:
+            junk.append((-1, *q))
+        elif q[0][0] in curr:
+            junk.append((1, *q))
+        else:
+            junk.append((0, *q))
+    return junk
+
+
 
 
 @bp.route('/libreg', methods=['GET', 'POST'])

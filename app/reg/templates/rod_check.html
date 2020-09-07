@@ -7,9 +7,19 @@
     {% if proj %}
         <p>{{ "Proj = {}".format(proj.proj) }}</p>
     {% endif %}
+    {% if dat %}
+        <pre>{{ dat }}</pre>
+    {% endif %}
+    {% if pairs %}
+        <pre>{{ pairs }}</pre>
+    {% endif %}
+    {% if junk %}
+        <pre>{{ junk }}</pre>
+    {% endif %}
     {% for p in pairs %}
         <br>{{ "{} and {}".format(p[0],p[1]) }}
     {% endfor %}
+    <hr><br>
     <div class="row">
         <div class="col-md-4">
             {{ form.submit() }}
