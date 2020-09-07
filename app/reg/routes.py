@@ -40,9 +40,10 @@ def rod_reg():
     if form.validate_on_submit():
         proj = Seq.query.filter_by(id=form.proj.data).first_or_404()
         pairs = rod_serial(proj, form.vics.data)
-        junk = rod_curr(pairs)
+        pairs = rod_curr(pairs)
+        form.submit.label.text = 'Confirm'
         return render_template('rod_check.html', title='Register sample pairs for ROD', \
-            form=form, proj=proj, pairs=pairs, dat=form.vics.data, junk=junk)
+            form=form, proj=proj, pairs=pairs, dat=form.vics.data)
     return render_template('rod_select.html', 
         title='Register sample pairs for ROD', form=form)
     # flash('ROD pairs defined')
@@ -71,11 +72,11 @@ def rod_curr(pairs):
     junk = []
     for q in pairs:
         if q[0][0] == -1 or q[1][0] == -1:
-            junk.append((-1, *q))
+            junk.append(('reject', *q))
         elif q[0][0] in curr:
-            junk.append((1, *q))
+            junk.append(('update', *q))
         else:
-            junk.append((0, *q))
+            junk.append(('new', *q))
     return junk
 
 

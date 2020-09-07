@@ -5,20 +5,32 @@
     <h1>Confirm Sample Pairs</h1>
     <hr>
     {% if proj %}
-        <p>{{ "Proj = {}".format(proj.proj) }}</p>
+        <p>Project <b>{{ proj.proj }}</b></p>
     {% endif %}
+    <!-- 
     {% if dat %}
         <pre>{{ dat }}</pre>
     {% endif %}
     {% if pairs %}
         <pre>{{ pairs }}</pre>
-    {% endif %}
-    {% if junk %}
-        <pre>{{ junk }}</pre>
-    {% endif %}
-    {% for p in pairs %}
-        <br>{{ "{} and {}".format(p[0],p[1]) }}
-    {% endfor %}
+    {% endif %} 
+    -->
+
+    <table border=1 cellspacing=30 width="70%">
+        <tr>
+            <th>action</th>
+            <th>protein</th>
+            <th>no protein</th>
+        </tr>
+        {% for p in pairs %}
+        <tr>
+            <td>{{ p[0] }}</td>
+            <td>{{ p[1][1] }}</td>
+            <td>{{ p[2][1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
     <hr><br>
     <div class="row">
         <div class="col-md-4">
