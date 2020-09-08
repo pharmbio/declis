@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>Confirm Sample Pairs</h1>
+    <hr>
+    <table class="table table-condensed">
+        {% if proj %}
+            <caption>Project <b>{{ proj.proj }}</b></caption>
+        {% endif %}
+            <tr>
+            <th>action</th>
+            <th>protein</th>
+            <th>no protein</th>
+        </tr>
+        {% for p in pairs %}
+        <tr 
+        {%if p[0] == 'reject' %}
+            class="danger" 
+        {% elif p[0] == 'update' %}
+            class="warning"
+        {% else %}
+            class="success"
+        {% endif %}
+        >
+            <td>{{ p[0] }}</td>
+            <td>{{ p[1][1] }}</td>
+            <td>{{ p[2][1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
