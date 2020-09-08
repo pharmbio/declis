@@ -3,16 +3,14 @@
 
 {% block app_content %}
     <h1>Select Sample Pairs</h1>
+    <br>
+    {% if foo %}
+        <p>Submit <b>{{ foo }}</b></p>
+    {% endif %}
+
     <div class="row">
         <div class="col-md-4">
             {{ wtf.quick_form(form) }}
         </div>
     </div>
-    <hr>
-    {% if proj %}
-        <p>{{ "Proj = {}".format(proj.proj)}}</p>
-    {% endif %}
-    {% for p in pairs %}
-        <br>{{ "prot {} and sans {}".format(p[0],p[1]) }}
-    {% endfor %}
 {% endblock %}

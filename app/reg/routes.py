@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import db
-from app.reg.forms import EmptyForm, LibraryForm, SampleForm, SequencingForm, RodForm
+from app.reg.forms import EmptyForm, RodForm, RodCheckForm, LibraryForm, SampleForm, SequencingForm
 from app.models import User, Lib, Seq, Sample, Rod
 from app.reg import bp
 
@@ -16,21 +16,32 @@ def before_request():
         db.session.commit()
 
 
-@bp.route('/rod_check', methods=['GET', 'POST'])
-def rod_chk(proj, pairs):
-    form = EmptyForm()
-    proj = Seq.query.filter_by(id=proj).first_or_404()
-    curr = Rod.query.all()
-    sams = Sample.query.filter_by(seq_id=proj.id).all()
+@bp.route('/check', methods=['GET', 'POST'])
+def rod_chk():
+    from base64 import b64decode
+    form = RodCheckForm()
+    proj = form.proj.data
+    pairs = form.pairs.data
+    pairs = eval(pairs)
+    pairs = b64decode(pairs)
+    pairs = pairs.decode()
+    pairs = eval(pairs)
+    # pairs = eval(b64decode(eval(form.pairs.data)).decode())
+    
+   
     if form.validate_on_submit():
-        flash('ROD pairs defined')
-        return redirect(url_for('main.index'))
-    return render_template('rod_check.html', title='Confirm sample pairs for ROD', \
-        form=form, proj=proj, pairs=pairs, curr=curr, sams=sams)
+        flash('ROD pairs defined for project {}'.format(proj))
+        
+        # return redirect(url_for('main.index'))
+        return render_template('rod_confirm.html', title='Confirm ROD sample pairs', \
+            proj=proj, pairs=pairs)
+    return render_template('rod_check.html', title='Empty ROD sample pairs', \
+        form=form, proj=proj, pairs=pairs)
 
 
 @bp.route('/pairs', methods=['GET', 'POST'])
 def rod_reg():
+    from base64 import b64encode
     form = RodForm()
     seqs = Seq.query.all()
     menu = []
@@ -39,11 +50,11 @@ def rod_reg():
     form.proj.choices = [(0,"select a project")] + menu
     if form.validate_on_submit():
         proj = Seq.query.filter_by(id=form.proj.data).first_or_404()
-        pairs = rod_serial(proj, form.vics.data)
+        pairs = rod_serial(proj, form.pairs.data)
         pairs = rod_curr(pairs)
         form.submit.label.text = 'Confirm'
         return render_template('rod_check.html', title='Register sample pairs for ROD', \
-            form=form, proj=proj, pairs=pairs, dat=form.vics.data)
+            form=form, proj=proj, pairs=pairs, trans=b64encode(str(pairs).encode()))
     return render_template('rod_select.html', 
         title='Register sample pairs for ROD', form=form)
     # flash('ROD pairs defined')
@@ -78,8 +89,6 @@ def rod_curr(pairs):
         else:
             junk.append(('new', *q))
     return junk
-
-
 
 
 @bp.route('/libreg', methods=['GET', 'POST'])
