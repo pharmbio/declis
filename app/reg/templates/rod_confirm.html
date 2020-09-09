@@ -15,7 +15,7 @@
         </tr>
         {% for p in pairs %}
         <tr 
-        {%if p[1] == 'new' %}
+        {%if p[0] == 'new' %}
             class="success" 
         {% elif p[0] == 'update' %}
             class="warning"
