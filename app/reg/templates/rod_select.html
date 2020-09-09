@@ -4,13 +4,30 @@
 {% block app_content %}
     <h1>Select Sample Pairs</h1>
     <br>
-    {% if foo %}
-        <p>Submit <b>{{ foo }}</b></p>
-    {% endif %}
-
+    <p class="lead">
+        Select a project (sequence run) and enter short sample names (ie, not including
+        the project code) for a sample exposed to protein on a line by itself, followed by
+        a sample not exposed to protein, followed by a blank line. More samples can be added
+        in the same way. There will be a confirmation page which shows which of these are
+        new, replacements or invalid.
+    </p>
+    <p>Example:</p>
+    <ul class="list-unstyled">
+        <li>1-R1</li>
+        <li>11-R1</li>
+        <li>&nbsp;</li>
+        <li>2-R1</li>
+        <li>12-R1</li>
+    </ul>
+    <br>
     <div class="row">
         <div class="col-md-4">
             {{ wtf.quick_form(form) }}
         </div>
     </div>
+<hr>
+<p class="lead">
+    If you get an error of "Not Found", it probably means that you forgot to 
+    select a project.
+</p>
 {% endblock %}

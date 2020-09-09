@@ -3,9 +3,9 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import db
+from app.reg import bp
 from app.reg.forms import EmptyForm, RodForm, RodCheckForm, LibraryForm, SampleForm, SequencingForm
 from app.models import User, Lib, Seq, Sample, Rod
-from app.reg import bp
 
 #admin_permission = Permission(RoleNeed('admin'))
 
@@ -27,11 +27,21 @@ def rod_chk():
     pairs = pairs.decode()
     pairs = eval(pairs)
     # pairs = eval(b64decode(eval(form.pairs.data)).decode())
-    
-   
+
+
     if form.validate_on_submit():
+        for p in pairs:
+            status, prot, sans = p[0], p[1][0], p[2][0]
+            if status == 'new':
+                rod = Rod(prot=prot, sans=sans)
+                db.session.add(rod)
+                db.session.commit()
+            elif status == 'update':
+                rod = Rod.query.filter_by(prot=prot).first_or_404()
+                rod.sans = sans
+                db.session.commit()
+        # commit at each step or at the end?
         flash('ROD pairs defined for project {}'.format(proj))
-        
         # return redirect(url_for('main.index'))
         return render_template('rod_confirm.html', title='Confirm ROD sample pairs', \
             proj=proj, pairs=pairs)

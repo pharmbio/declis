@@ -4,6 +4,11 @@
 {% block app_content %}
     <h1>Confirm Sample Pairs</h1>
     <hr>
+    <p class="lead">
+        The table below shows how the system has parsed the data sent from the previous
+        page. In particular, the pairs are categorized into what appears to be new,
+        replacements or invalid (poor format or unknown for the selected project).
+    </p>
     <table class="table table-condensed">
         {% if proj %}
             <caption>Project <b>{{ proj.proj }}</b></caption>
@@ -15,12 +20,12 @@
         </tr>
         {% for p in pairs %}
         <tr 
-        {%if p[0] == 'reject' %}
-            class="danger" 
+        {%if p[1] == 'new' %}
+            class="success" 
         {% elif p[0] == 'update' %}
             class="warning"
         {% else %}
-            class="success"
+            class="danger"
         {% endif %}
         >
             <td>{{ p[0] }}</td>
@@ -31,6 +36,12 @@
     </table>
 
     <hr><br>
+    <p class="lead">
+        If you find anything unexpected, navigate back to the previous page and fix
+        the entries or go back to the start page.
+    </p>
+    <hr><br>
+
     <div class="row">
         <div class="col-md-4">
             <form action='/reg/check' method="post" novalidate>

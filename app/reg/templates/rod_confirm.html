@@ -15,12 +15,12 @@
         </tr>
         {% for p in pairs %}
         <tr 
-        {%if p[0] == 'reject' %}
-            class="danger" 
+        {%if p[1] == 'new' %}
+            class="success" 
         {% elif p[0] == 'update' %}
             class="warning"
         {% else %}
-            class="success"
+            class="danger"
         {% endif %}
         >
             <td>{{ p[0] }}</td>
