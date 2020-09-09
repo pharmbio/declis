@@ -28,7 +28,6 @@ def rod_chk():
     pairs = eval(pairs)
     # pairs = eval(b64decode(eval(form.pairs.data)).decode())
 
-
     if form.validate_on_submit():
         for p in pairs:
             status, prot, sans = p[0], p[1][0], p[2][0]
@@ -42,9 +41,9 @@ def rod_chk():
                 db.session.commit()
         # commit at each step or at the end?
         flash('ROD pairs defined for project {}'.format(proj))
-        # return redirect(url_for('main.index'))
-        return render_template('rod_confirm.html', title='Confirm ROD sample pairs', \
-            proj=proj, pairs=pairs)
+        return redirect(url_for('main.index'))
+        # return render_template('rod_confirm.html', title='Confirm ROD sample pairs', \
+        #    proj=proj, pairs=pairs)
     return render_template('rod_check.html', title='Empty ROD sample pairs', \
         form=form, proj=proj, pairs=pairs)
 
