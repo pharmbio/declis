@@ -72,9 +72,41 @@ def find_hits():
     form.ntc.choices    = [(0,"select an NTC (optional)")] + menu
     if form.validate_on_submit():
         hits = (form.limit.data,form.sample.data,form.naive.data,form.ntc.data)
+        res = enrank(form.limit.data,form.sample.data,form.naive.data,form.ntc.data)
+
         return render_template('search.html', title='Find dataset', form=form, hits=hits)
     return render_template('search.html', title='Find dataset', form=form)
 
+def enrank(lim, sample, naive, ntc):
+    # if 0 ...
+    sam = Results.query.with_entities(Results.bb,Results.copies).filter_by(sample=sample).all()
+    nai = Results.query.with_entities(Results.bb,Results.copies).filter_by(sample=naive).all()
+    ntc = Results.query.with_entities(Results.bb,Results.copies).filter_by(sample=ntc).all()
+    sam = dict(sam)
+    nai = dict(nai)
+    ntc = dict(nts)
+    
+
+def rank_simple(dat):
+    return sorted(range(len(dat)), key=dat.__getitem__, reverse=True)
+
+def rankdata(dat):
+    n = len(dat)
+    ivec = rank_simple(dat)
+    svec = [dat[rank] for rank in ivec]
+    sumranks = 0
+    dupcount = 0
+    newarray = [0]*n
+    for i in range(n):
+        sumranks += i
+        dupcount += 1
+        if i==n-1 or svec[i] != svec[i+1]:
+            averank = sumranks / float(dupcount) + 1
+            for j in range(i-dupcount+1,i+1):
+                newarray[ivec[j]] = averank
+            sumranks = 0
+            dupcount = 0
+    return newarray
 
 
 @bp.route('/sample/<sam>')

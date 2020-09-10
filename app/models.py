@@ -64,6 +64,7 @@ class Results(db.Model):
     b1 = db.Column(db.Integer)
     b2 = db.Column(db.Integer)
     b3 = db.Column(db.Integer)
+    bb = db.Column(db.String(31))
     copies = db.Column(db.Integer)
     relative = db.Column(db.Float)
 
