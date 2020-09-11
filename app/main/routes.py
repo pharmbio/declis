@@ -75,7 +75,8 @@ def find_hits():
             flash("Ain't gonna see nuthin without pickin a sample.")
             return render_template('search.html', title='Find dataset', form=form)
         elif not form.naive.data and not form.ntc.data:
-            hits = resdump(form.limit.data, form.sample.data)
+            # need to specify library size
+            hits = resdump(form.limit.data, form.sample.data, 1000)
             return render_template('search.html', title='Find dataset', form=form, hits=hits)
         elif form.ntc.data:
             flash("Comparison to NTC not yet implemented")
@@ -85,13 +86,13 @@ def find_hits():
             return render_template('search.html', title='Find dataset', form=form, enrich=enrich)
     return render_template('search.html', title='Find dataset', form=form)
 
-def resdump(lim, sid):
+def resdump(lim, sid, size):
     sample = Results.query.filter_by(sample=sid).order_by(Results.copies.desc()).limit(lim)
     smi = Chems.query.with_entities(Chems.bb,Chems.smi).all()
     smi = dict(smi)
     out = []
     for sam in sample:
-        out.append((sam.b1,sam.b2,sam.b3,sam.copies,sam.relative,smi[sam.bb]))
+        out.append((sam.b1,sam.b2,sam.b3,sam.copies,round(size*sam.relative,4),smi[sam.bb]))
     return out
 
 def enrank(lim, sid, nid):
@@ -103,7 +104,7 @@ def enrank(lim, sid, nid):
     smi = dict(smi)
     enr = []
     for bb in sam:
-        enr.append((bb, sam[bb]/nai[bb], smi[bb]))
+        enr.append((bb, round(sam[bb]/nai[bb],4), smi[bb]))
     enr.sort(key=lambda x: x[1], reverse=True)
     return enr[:lim]
     # return (len(sam), len(nai))
