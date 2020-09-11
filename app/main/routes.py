@@ -63,7 +63,7 @@ def find_chems():
 @login_required
 def find_hits():
     form = SearchForm()
-    samples = Sample.query.all()
+    samples = Sample.query.filter(Sample.seq_id > 5).all()
     menu = []
     for sam in samples:
         menu.append((sam.id, "D{:02d} {}".format(sam.seq_id, sam.name)))
@@ -71,21 +71,35 @@ def find_hits():
     form.naive.choices  = [(0,"select a naive (optional)")] + menu
     form.ntc.choices    = [(0,"select an NTC (optional)")] + menu
     if form.validate_on_submit():
-        hits = (form.limit.data,form.sample.data,form.naive.data,form.ntc.data)
-        res = enrank(form.limit.data,form.sample.data,form.naive.data,form.ntc.data)
-
-        return render_template('search.html', title='Find dataset', form=form, hits=hits)
+        if not form.sample.data:
+            flash("Ain't gonna see nuthin without pickin a sample.")
+            return render_template('search.html', title='Find dataset', form=form)
+        elif not form.naive.data and not form.ntc.data:
+            hits = resdump(form.limit.data, form.sample.data)
+            return render_template('search.html', title='Find dataset', form=form, hits=hits)
+        elif form.ntc.data:
+            flash("Comparison to NTC not yet implemented")
+            return render_template('search.html', title='Find dataset', form=form)
+        elif form.naive.data:
+            enrich = enrank(form.limit.data, form.sample.data, form.naive.data)
+            return render_template('search.html', title='Find dataset', form=form, enrich=enrich)
     return render_template('search.html', title='Find dataset', form=form)
 
-def enrank(lim, sample, naive, ntc):
-    # if 0 ...
-    sam = Results.query.with_entities(Results.bb,Results.copies).filter_by(sample=sample).all()
-    nai = Results.query.with_entities(Results.bb,Results.copies).filter_by(sample=naive).all()
-    ntc = Results.query.with_entities(Results.bb,Results.copies).filter_by(sample=ntc).all()
+def enrank(lim, sid, nid):
+    sam = Results.query.with_entities(Results.bb,Results.copies).filter_by(sample=sid).all()
+    nai = Results.query.with_entities(Results.bb,Results.copies).filter_by(sample=nid).all()
     sam = dict(sam)
     nai = dict(nai)
-    ntc = dict(nts)
-    
+    return (len(sam), len(nai))
+
+def resdump(lim, sid):
+    sample = Results.query.filter_by(sample=sid).order_by(Results.copies.desc()).limit(lim)
+    out = []
+    for sam in sample:
+        out.append((sam.b1,sam.b2,sam.b3,sam.copies,sam.relative))
+    return out
+
+
 
 def rank_simple(dat):
     return sorted(range(len(dat)), key=dat.__getitem__, reverse=True)

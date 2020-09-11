@@ -10,6 +10,23 @@
     </div>
     <hr>
     {% if hits %}
-        {{ hits }}
+    <table width="80%">
+        <tr>
+            <th>b1</th>
+            <th>b2</th>
+            <th>b3</th>
+            <th>copies</th>
+            <th>relative</th>
+        </tr>
+        {% for hit in hits %}
+            <tr>
+                {% for i in hit %}
+                    <td>{{ i }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    {% elif enrich %}
+        {{ enrich }}
     {% endif %}
 {% endblock %}
