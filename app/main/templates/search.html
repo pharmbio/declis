@@ -10,13 +10,14 @@
     </div>
     <hr>
     {% if hits %}
-        <table width="80%">
+        <table class="table table-condensed">
             <tr>
                 <th>b1</th>
                 <th>b2</th>
                 <th>b3</th>
                 <th>copies</th>
                 <th>relative</th>
+                <th>smiles</th>
             </tr>
             {% for hit in hits %}
                 <tr>
@@ -27,12 +28,13 @@
             {% endfor %}
         </table>
     {% elif enrich %}
-        <table width="80%">
+        <table class="table table-condensed">
             <tr>
                 <th>b1</th>
                 <th>b2</th>
                 <th>b3</th>
                 <th>enrichment</th>
+                <th>smiles</th>
             </tr>
             {% for hit in enrich %}
                 <tr>
@@ -41,6 +43,7 @@
                         <td>{{ i }}</td>
                     {% endfor %}
                     <td>{{ hit[1] }}</td>
+                    <td>{{ hit[2] }}</td>
                 </tr>
             {% endfor %}
         </table>

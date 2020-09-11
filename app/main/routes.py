@@ -87,19 +87,23 @@ def find_hits():
 
 def resdump(lim, sid):
     sample = Results.query.filter_by(sample=sid).order_by(Results.copies.desc()).limit(lim)
+    smi = Chems.query.with_entities(Chems.bb,Chems.smi).all()
+    smi = dict(smi)
     out = []
     for sam in sample:
-        out.append((sam.b1,sam.b2,sam.b3,sam.copies,sam.relative))
+        out.append((sam.b1,sam.b2,sam.b3,sam.copies,sam.relative,smi[sam.bb]))
     return out
 
 def enrank(lim, sid, nid):
     sam = Results.query.with_entities(Results.bb,Results.relative).filter_by(sample=sid).all()
     nai = Results.query.with_entities(Results.bb,Results.relative).filter_by(sample=nid).all()
+    smi = Chems.query.with_entities(Chems.bb,Chems.smi).all()
     sam = dict(sam)
     nai = dict(nai)
+    smi = dict(smi)
     enr = []
     for bb in sam:
-        enr.append((bb, sam[bb]/nai[bb]))
+        enr.append((bb, sam[bb]/nai[bb], smi[bb]))
     enr.sort(key=lambda x: x[1], reverse=True)
     return enr[:lim]
     # return (len(sam), len(nai))

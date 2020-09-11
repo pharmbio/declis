@@ -81,6 +81,7 @@ class Enrich(db.Model):
 
 
 class Chems(db.Model):
+    # need to add library
     id = db.Column(db.Integer, primary_key=True)
     b1 = db.Column(db.Integer)
     b2 = db.Column(db.Integer)
