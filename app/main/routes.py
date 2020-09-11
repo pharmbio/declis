@@ -85,13 +85,6 @@ def find_hits():
             return render_template('search.html', title='Find dataset', form=form, enrich=enrich)
     return render_template('search.html', title='Find dataset', form=form)
 
-def enrank(lim, sid, nid):
-    sam = Results.query.with_entities(Results.bb,Results.copies).filter_by(sample=sid).all()
-    nai = Results.query.with_entities(Results.bb,Results.copies).filter_by(sample=nid).all()
-    sam = dict(sam)
-    nai = dict(nai)
-    return (len(sam), len(nai))
-
 def resdump(lim, sid):
     sample = Results.query.filter_by(sample=sid).order_by(Results.copies.desc()).limit(lim)
     out = []
@@ -99,7 +92,17 @@ def resdump(lim, sid):
         out.append((sam.b1,sam.b2,sam.b3,sam.copies,sam.relative))
     return out
 
-
+def enrank(lim, sid, nid):
+    sam = Results.query.with_entities(Results.bb,Results.relative).filter_by(sample=sid).all()
+    nai = Results.query.with_entities(Results.bb,Results.relative).filter_by(sample=nid).all()
+    sam = dict(sam)
+    nai = dict(nai)
+    enr = []
+    for bb in sam:
+        enr.append((bb, sam[bb]/nai[bb]))
+    enr.sort(key=lambda x: x[1], reverse=True)
+    return enr[:lim]
+    # return (len(sam), len(nai))
 
 def rank_simple(dat):
     return sorted(range(len(dat)), key=dat.__getitem__, reverse=True)

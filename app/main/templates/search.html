@@ -10,23 +10,39 @@
     </div>
     <hr>
     {% if hits %}
-    <table width="80%">
-        <tr>
-            <th>b1</th>
-            <th>b2</th>
-            <th>b3</th>
-            <th>copies</th>
-            <th>relative</th>
-        </tr>
-        {% for hit in hits %}
+        <table width="80%">
             <tr>
-                {% for i in hit %}
-                    <td>{{ i }}</td>
-                {% endfor %}
+                <th>b1</th>
+                <th>b2</th>
+                <th>b3</th>
+                <th>copies</th>
+                <th>relative</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for hit in hits %}
+                <tr>
+                    {% for i in hit %}
+                        <td>{{ i }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
     {% elif enrich %}
-        {{ enrich }}
+        <table width="80%">
+            <tr>
+                <th>b1</th>
+                <th>b2</th>
+                <th>b3</th>
+                <th>enrichment</th>
+            </tr>
+            {% for hit in enrich %}
+                <tr>
+                    {% set bb = hit[0].split('_') %}
+                    {% for i in bb %}
+                        <td>{{ i }}</td>
+                    {% endfor %}
+                    <td>{{ hit[1] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
     {% endif %}
 {% endblock %}
