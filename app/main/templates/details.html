@@ -79,6 +79,18 @@
       </tr>
     </table>
     <br>
+    {% else %}
+    <table width="100%">
+      <tr valign="top">
+        <td><img src="{{ "/static/norm/{}/{}-bb.png".format(seq.id, sample.name) }}"></td>
+        <td>
+          <u>Downloads</u> <br>
+          <a href="{{ "/static/norm/{}/{}-bb-1.txt".format(seq.id, sample.name) }}">bb-1</a> <br>
+          <a href="{{ "/static/norm/{}/{}-bb-2.txt".format(seq.id, sample.name) }}">bb-2</a> <br>
+          <a href="{{ "/static/norm/{}/{}-bb-3.txt".format(seq.id, sample.name) }}">bb-3</a>
+        </td>
+      </tr>
+    </table>
     {% endif %}
     <table width="100%" border=1>
       {% for hit in enrich_top %}
