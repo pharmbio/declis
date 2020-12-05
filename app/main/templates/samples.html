@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h1>Samples of Sequencing Run {{ seq.id }} of Project {{ seq.proj }}</h1>
-    
     <nav aria-label="...">
       <ul class="pager">
           <li class="previous{% if not seq_prev %} disabled{% endif %}">
@@ -25,9 +23,15 @@
               </a>
           </li>
       </ul>
-  </nav>
+    </nav>
+
+    <h1>Samples of Sequencing Run {{ seq.id }} of Project {{ seq.proj }}</h1>
     
-    <table width="80%">
+    <p class="lead">
+        {{ seq.comment }}
+    </p>
+    <br>
+    <table class="table table-condensed">
       <tr>
         <th>name</th>
         <th>protein, uM</th>
