@@ -83,12 +83,12 @@ class Enrich(db.Model):
 class Chems(db.Model):
     # need to add library
     id = db.Column(db.Integer, primary_key=True)
+    lib_id = db.Column(db.Integer, db.ForeignKey('lib.id'))
     b1 = db.Column(db.Integer)
     b2 = db.Column(db.Integer)
     b3 = db.Column(db.Integer)
     bb = db.Column(db.String(31))
     smi = db.Column(db.String(256))
-    note = db.Column(db.String(256))
 
 
 class Products(db.Model):
