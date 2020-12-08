@@ -56,11 +56,14 @@ class Sample(db.Model):
     washes = db.Column(db.Integer)
     spike = db.Column(db.String(127))
     special = db.Column(db.String(127))
+    access = db.Column(db.String(127))
+    target = db.Column(db.String(127))
+
 
 
 class Results(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    sample = db.Column(db.Integer, db.ForeignKey('sample.id'))
+    sample = db.Column(db.Integer, db.ForeignKey('sample.id'), index=True)
     b1 = db.Column(db.Integer)
     b2 = db.Column(db.Integer)
     b3 = db.Column(db.Integer)
@@ -72,7 +75,7 @@ class Results(db.Model):
 class Enrich(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     base = db.Column(db.Integer, db.ForeignKey('sample.id'))
-    sample = db.Column(db.Integer, db.ForeignKey('sample.id'))
+    sample = db.Column(db.Integer, db.ForeignKey('sample.id'), index=True)
     b1 = db.Column(db.Integer)
     b2 = db.Column(db.Integer)
     b3 = db.Column(db.Integer)
@@ -87,7 +90,7 @@ class Chems(db.Model):
     b1 = db.Column(db.Integer)
     b2 = db.Column(db.Integer)
     b3 = db.Column(db.Integer)
-    bb = db.Column(db.String(31))
+    bb = db.Column(db.String(31), index=True)
     smi = db.Column(db.String(256))
 
 

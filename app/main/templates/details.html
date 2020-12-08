@@ -99,6 +99,8 @@
           {{ 'Hit: {} {} {}'.format(hit.b1,hit.b2,hit.b3) }}
           <br>
           {{ 'Enrichment {:.2f}'.format(hit.enrich) }}
+          <br>
+          {{ hit.smi }}
         </td>
         <td><img src="{{ "/static/chem/{}_{}_{}.png".format(hit.b1,hit.b2,hit.b3) }}"></td>
       </tr>
