@@ -67,7 +67,7 @@ class Results(db.Model):
     b1 = db.Column(db.Integer)
     b2 = db.Column(db.Integer)
     b3 = db.Column(db.Integer)
-    bb = db.Column(db.String(31))
+    bb = db.Column(db.String(31), index=True)
     copies = db.Column(db.Integer)
     relative = db.Column(db.Float)
 
@@ -79,6 +79,7 @@ class Enrich(db.Model):
     b1 = db.Column(db.Integer)
     b2 = db.Column(db.Integer)
     b3 = db.Column(db.Integer)
+    bb = db.Column(db.String(31), index=True)
     enrich = db.Column(db.Float)
     rank = db.Column(db.Integer)
 
