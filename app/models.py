@@ -61,6 +61,17 @@ class Sample(db.Model):
 
 
 
+class Chems(db.Model):
+    # need to add library
+    id = db.Column(db.Integer, primary_key=True)
+    lib_id = db.Column(db.Integer, db.ForeignKey('lib.id'))
+    b1 = db.Column(db.Integer)
+    b2 = db.Column(db.Integer)
+    b3 = db.Column(db.Integer)
+    bb = db.Column(db.String(31), index=True)
+    smi = db.Column(db.String(256))
+
+
 class Results(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sample = db.Column(db.Integer, db.ForeignKey('sample.id'), index=True)
@@ -82,17 +93,6 @@ class Enrich(db.Model):
     bb = db.Column(db.String(31), index=True)
     enrich = db.Column(db.Float)
     rank = db.Column(db.Integer)
-
-
-class Chems(db.Model):
-    # need to add library
-    id = db.Column(db.Integer, primary_key=True)
-    lib_id = db.Column(db.Integer, db.ForeignKey('lib.id'))
-    b1 = db.Column(db.Integer)
-    b2 = db.Column(db.Integer)
-    b3 = db.Column(db.Integer)
-    bb = db.Column(db.String(31), index=True)
-    smi = db.Column(db.String(256))
 
 
 class Products(db.Model):

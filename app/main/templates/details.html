@@ -57,23 +57,6 @@
       <tr valign="top">
         <td><img src="{{ "/static/enrich/{}/{}.png".format(seq.id, sample.name) }}"></td>
         <td>
-          <!-- <span>Top Hits</span>
-          <table width="100%" border=1>
-            <tr>
-              <th>bb1</th>
-              <th>bb2</th>
-              <th>bb3</th>
-              <th>enrichment</th>
-            </tr>
-            {% for hit in enrich_top %}
-              <tr>
-                <td>{{ hit.b1 }}</td>
-                <td>{{ hit.b2 }}</td>
-                <td>{{ hit.b3 }}</td>
-                <td>{{ '{:.2f}'.format(hit.enrich) }}</td>
-              </tr>
-            {% endfor %}
-          </table> -->
           <img src="{{ "/static/enrich/{}/{}-s.png".format(seq.id, sample.name) }}">
         </td>
       </tr>
@@ -102,7 +85,11 @@
           <br>
           {{ hit.smi }}
         </td>
+        {% if hit.b1 > 150 %}
+        <td><img src="{{ "/static/chem/{}/{}_{}_{}.png".format(hit.b1,hit.b1,hit.b2,hit.b3) }}"></td>
+        {% else %}
         <td><img src="{{ "/static/chem/{}_{}_{}.png".format(hit.b1,hit.b2,hit.b3) }}"></td>
+        {% endif %}
       </tr>
       {% endfor %}
     </table>
