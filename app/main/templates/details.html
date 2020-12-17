@@ -60,7 +60,9 @@
       </tr>
     </table>
     <br><h2>Raw Results</h2>
+    
     {% include '_img_pair.html' %}
+
     {% if enrich_top.count() %}
     <br><h2>Corrected Results</h2>
     <table width="100%">
@@ -72,8 +74,7 @@
       </tr>
     </table>
     <br>
-    {% endif %}
-
+    {% else %}
     <br><h2>Building Block Distribution</h2>
     <table width="100%">
       <tr valign="top">
@@ -86,6 +87,7 @@
         </td>
       </tr>
     </table>
+    {% endif %}
 
     {% if enrich_top.count() %}
     <br><h2>Top Hits</h2>
@@ -93,11 +95,20 @@
       {% for hit,chem in enrich_top %}
       <tr>
         <td>
-          {{ 'Hit: {} {} {}'.format(hit.b1,hit.b2,hit.b3) }}
-          <br>
-          {{ 'Enrichment {:.2f}'.format(hit.enrich) }}
-          <br>
-          {{ chem.smi }}
+          <table class="table table-condensed">
+            <tr>
+              <td>Barcode</td>
+              <td>{{ hit.bb }}</td>
+            </tr>
+            <tr>
+              <td>Enrichment</td>
+              <td>{{ '{:.2f}'.format(hit.enrich) }}</td>
+            </tr>
+            <tr>
+              <td>Smiles</td>
+              <td>{{ chem.smi }}</td>
+            </tr>
+          </table>
         </td>
         {% if hit.b1 > 150 %}
         <td><img src="{{ "/static/chem/{}/{}_{}_{}.png".format(hit.b1,hit.b1,hit.b2,hit.b3) }}"></td>
