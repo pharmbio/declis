@@ -17,5 +17,5 @@ RUN chown -R declis:www-data ./
 USER declis
 
 EXPOSE 5011
-ENV GUNICORN_CMD_ARGS "-b :5011 --forwarded-allow-ips='*' --access-logfile - --error-logfile -"
+ENV GUNICORN_CMD_ARGS "-b :5011 --workers 3 --timeout 120  --forwarded-allow-ips='*' --access-logfile - --error-logfile -"
 CMD ["gunicorn", "declis:app"]
