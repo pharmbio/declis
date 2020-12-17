@@ -138,8 +138,13 @@ def samres(sam):
     seq     = Seq.query.filter_by(id=sample.seq_id).first_or_404()
     samples = Sample.query.filter_by(seq_id=seq.id).all()
 
-    enrich_top = Enrich.query.filter_by(sample=sam).order_by('rank').limit(20)
-    # enrich_top = Enrich.query.filter_by(sample=sam).join(Chems, Enrich.bb==Chems.bb).add_columns(Chems.smi).order_by('rank').limit(20)
+    # enrich_top = Enrich.query.filter_by(sample=sam).order_by('rank').limit(20)
+    # enrich_top = Enrich.query.join(Chems, Enrich.bb == Chems.bb).\
+    #    filter(Enrich.sample == sam).order_by('rank').limit(20)
+    # enrich_top = Enrich.query.join(Chems, Enrich.bb == Chems.bb).\
+    #    filter(Enrich.sample == sam).add_columns(Chems.smi).order_by('rank').limit(20)
+    enrich_top = db.session.query(Enrich, Chems).join(Chems, Enrich.bb == Chems.bb).\
+        filter(Enrich.sample == sam).order_by('rank').limit(20)
 
     sam_list = [x.id for x in samples]
     sam_pos  = sam_list.index(int(sam))
