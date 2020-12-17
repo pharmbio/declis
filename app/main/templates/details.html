@@ -29,6 +29,7 @@
 
     <table width="80%">
       <tr>
+        <th>target</th>
         <th>protein, uM</th>
         <th>lib, pmol</th>
         <th>beed type</th>
@@ -36,9 +37,13 @@
         <th>washes</th>
         <th>spike</th>
         <th>conditions</th>
-        <th>Download</th>
+        <th>Download Raw</th>
+        {% if enrich_top.count() %}
+        <th>Corrected</th>
+        {% endif%}
       </tr>
       <tr>
+        <td>{{ sample.target }}</td>
         <td>{{ sample.protein_umol }}</td>
         <td>{{ sample.lib_pmol }}</td>
         <td>{{ sample.bead_type }}</td>
@@ -47,12 +52,17 @@
         <td>{{ sample.spike }}</td>
         <td>{{ sample.special }}</td>
         <td><a href="{{ "/static/raw/{}/{}.txt".format(seq.id, sample.name) }}"
-          download="{{ "d{:03d}_{}".format(seq.id, sample.name) }}">{{ sample.name }}</a></td>
+          download="{{ "d{:03d}_{}_raw".format(seq.id, sample.name) }}">{{ sample.name }}</a></td>
+        {% if enrich_top.count() %}
+        <td><a href="{{ "/static/res/{}/{}.txt".format(seq.id, sample.name) }}"
+          download="{{ "d{:03d}_{}_cor".format(seq.id, sample.name) }}">{{ sample.name }}</a></td>
+        {% endif%}
       </tr>
     </table>
-    <br>
+    <br><h2>Raw Results</h2>
     {% include '_img_pair.html' %}
     {% if enrich_top.count() %}
+    <br><h2>Corrected Results</h2>
     <table width="100%">
       <tr valign="top">
         <td><img src="{{ "/static/enrich/{}/{}.png".format(seq.id, sample.name) }}"></td>
@@ -62,7 +72,9 @@
       </tr>
     </table>
     <br>
-    {% else %}
+    {% endif %}
+
+    <br><h2>Building Block Distribution</h2>
     <table width="100%">
       <tr valign="top">
         <td><img src="{{ "/static/norm/{}/{}-bb.png".format(seq.id, sample.name) }}"></td>
@@ -74,7 +86,9 @@
         </td>
       </tr>
     </table>
-    {% endif %}
+
+    {% if enrich_top.count() %}
+    <br><h2>Top Hits</h2>
     <table width="100%" border=1>
       {% for hit,chem in enrich_top %}
       <tr>
@@ -93,4 +107,5 @@
       </tr>
       {% endfor %}
     </table>
+    {% endif %}
 {% endblock %}
