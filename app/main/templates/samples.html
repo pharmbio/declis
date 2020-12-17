@@ -34,6 +34,7 @@
     <table class="table table-condensed">
       <tr>
         <th>name</th>
+        <th>target</th>
         <th>protein, uM</th>
         <th>lib, pmol</th>
         <th>beed type</th>
@@ -41,10 +42,13 @@
         <th>washes</th>
         <th>spike</th>
         <th>conditions</th>
+        <th>download raw</th>
+        <th>corrected</th>
       </tr>
       {% for sample in samples %}
         <tr>
           <td><a href="{{ "/sample/{}".format(sample.id) }}">{{ sample.name }}</a></td>
+          <td>{{ sample.target }}</td>
           <td>{{ sample.protein_umol }}</td>
           <td>{{ sample.lib_pmol }}</td>
           <td>{{ sample.bead_type }}</td>
@@ -52,6 +56,14 @@
           <td>{{ sample.washes }}</td>
           <td>{{ sample.spike }}</td>
           <td>{{ sample.special }}</td>
+          <td><a href="{{ "/static/raw/{}/{}.txt".format(seq.id, sample.name) }}"
+            download="{{ "d{:03d}_{}_raw".format(seq.id, sample.name) }}">{{ sample.name }}</a></td>
+          {% if sample.special == 'naive'  %}
+          <td> na </td>
+          {% else %}
+          <td><a href="{{ "/static/res/{}/{}.txt".format(seq.id, sample.name) }}"
+            download="{{ "d{:03d}_{}_cor".format(seq.id, sample.name) }}">{{ sample.name }}</a></td>
+          {% endif %}
         </tr>
       {% endfor %}
     </table>
