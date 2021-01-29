@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Details for Sample {{ sample.name }} of Sequencing Run {{ seq.id }} of Project {{ seq.proj }}</h1>
+
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not sam_prev %} disabled{% endif %}">
+                {% if sam_prev %}
+                    <a href="{{ "/simple/{}".format(sam_prev) }}">
+                {% else %}
+                    <a href="{{ "/simple/{}".format(sample.id) }}">
+                {% endif %}
+                    <span aria-hidden="true">&larr;</span> {{ 'Previous Sample' }}
+                </a>
+            </li>
+            <li><a href="{{ "/seq/{}".format(seq.id) }}">Back</a></li>
+            <li class="next{% if not sam_next %} disabled{% endif %}">
+                {% if sam_next %}
+                    <a href="{{ "/simple/{}".format(sam_next) }}">
+                {% else %}
+                    <a href="{{ "/simple/{}".format(sample_id) }}">
+                {% endif %}
+                    {{ 'Next Sample' }} <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <table width="80%">
+      <tr>
+        <th>target</th>
+        <th>protein, uM</th>
+        <th>lib, pmol</th>
+        <th>beed type</th>
+        <th>beed, ul</th>
+        <th>washes</th>
+        <th>spike</th>
+        <th>conditions</th>
+        <th>Download Raw</th>
+        {% if enrich_top.count() %}
+        <th>Corrected</th>
+        {% endif%}
+      </tr>
+      <tr>
+        <td>{{ sample.target }}</td>
+        <td>{{ sample.protein_umol }}</td>
+        <td>{{ sample.lib_pmol }}</td>
+        <td>{{ sample.bead_type }}</td>
+        <td>{{ sample.bead_ul }}</td>
+        <td>{{ sample.washes }}</td>
+        <td>{{ sample.spike }}</td>
+        <td>{{ sample.special }}</td>
+        <td><a href="{{ "/static/raw/{}/{}.txt".format(seq.id, sample.name) }}"
+          download="{{ "d{:03d}_{}_raw".format(seq.id, sample.name) }}">{{ sample.name }}</a></td>
+        {% if enrich_top.count() %}
+        <td><a href="{{ "/static/res/{}/{}.txt".format(seq.id, sample.name) }}"
+          download="{{ "d{:03d}_{}_cor".format(seq.id, sample.name) }}">{{ sample.name }}</a></td>
+        {% endif%}
+      </tr>
+    </table>
+    <br><h2>Raw Results</h2>
+    
+    {% include '_img_pair.html' %}
+
+    {% if enrich_top.count() %}
+    <br><h2>Corrected Results</h2>
+    <table width="100%">
+      <tr valign="top">
+        <td><img src="{{ "/static/enrich/{}/{}.png".format(seq.id, sample.name) }}"></td>
+        <td>
+          <img src="{{ "/static/enrich/{}/{}-s.png".format(seq.id, sample.name) }}">
+        </td>
+      </tr>
+    </table>
+    <br>
+    {% else %}
+    <br><h2>Building Block Distribution</h2>
+    <table width="100%">
+      <tr valign="top">
+        <td><img src="{{ "/static/norm/{}/{}-bb.png".format(seq.id, sample.name) }}"></td>
+        <td>
+          <u>Downloads</u> <br>
+          <a href="{{ "/static/norm/{}/{}-bb-1.txt".format(seq.id, sample.name) }}">bb-1</a> <br>
+          <a href="{{ "/static/norm/{}/{}-bb-2.txt".format(seq.id, sample.name) }}">bb-2</a> <br>
+          <a href="{{ "/static/norm/{}/{}-bb-3.txt".format(seq.id, sample.name) }}">bb-3</a>
+        </td>
+      </tr>
+    </table>
+    {% endif %}
+
+    {% if enrich_top.count() %}
+    <br><h2>Top Hits</h2>
+    <table width="100%" border=1>
+      {% for hit,chem in enrich_top %}
+      <tr>
+        <td>
+          <table class="table table-condensed">
+            <tr>
+              <td>Barcode</td>
+              <td>{{ hit.bb }}</td>
+            </tr>
+            <tr>
+              <td>Enrichment</td>
+              <td>{{ '{:.2f}'.format(hit.enrich) }}</td>
+            </tr>
+            <tr>
+              <td>Smiles</td>
+              <td>{{ chem.smi }}</td>
+            </tr>
+          </table>
+        </td>
+        {% if False and hit.b1 > 150 %}
+        <td><img src="{{ "/static/chem/{}/{}_{}_{}.png".format(hit.b1,hit.b1,hit.b2,hit.b3) }}"></td>
+        {% else %}
+        <td><img src="{{ "/static/chem/{}_{}_{}.png".format(hit.b1,hit.b2,hit.b3) }}"></td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+{% endblock %}
