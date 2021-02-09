@@ -109,3 +109,11 @@ class Rod(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     prot = db.Column(db.Integer, db.ForeignKey('sample.id'))
     sans = db.Column(db.Integer, db.ForeignKey('sample.id'))
+
+
+class Encache(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sample = db.Column(db.Integer, db.ForeignKey('sample.id'), index=True)
+    bb = db.Column(db.String(31))
+    enrich = db.Column(db.Float)
+    smi = db.Column(db.String(256))
