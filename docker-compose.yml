@@ -34,3 +34,4 @@ services:
 
 # docker run -it --rm -i -v ${HOME}/declis/remote/static:/static \
 # -w /static -u ${UID}:33 mcs07/rdkit:latest /bin/bash
+# docker exec -it `docker container ls | awk '/declis/ {print $1}'` /bin/bash
