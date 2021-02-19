@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import db
 from app.main.forms import EmptyForm, ChemForm, SearchForm
-from app.models import User, Lib, Seq, Sample, Results, Enrich, Chems
+from app.models import User, Lib, Seq, Sample, Results, Enrich, Chems, Encache
 from app.main import bp
 
 #admin_permission = Permission(RoleNeed('admin'))
@@ -138,22 +138,29 @@ def simres(sam):
     seq     = Seq.query.filter_by(id=sample.seq_id).first_or_404()
     samples = Sample.query.filter_by(seq_id=seq.id).all()
 
-    # hits = Enchache.query.filter_by(sample=sam).all()
-    # if not hits:
-    #   old_method
-    #   grab necessary columns
-    #   store in Enchace
-    #   return 
-
-    enrich_top = db.session.query(Enrich, Chems).join(Chems, Enrich.bb == Chems.bb).\
-        filter(Enrich.sample == sam).order_by('rank').limit(20)
-
+    enrich_top = Encache.query.filter_by(sample=sam).limit(20)
     sam_list = [x.id for x in samples]
     sam_pos  = sam_list.index(int(sam))
     sam_next = sam_list[sam_pos+1] if int(sam) < max(sam_list) else 0
     sam_prev = sam_list[sam_pos-1] if int(sam) > min(sam_list) else 0
     form = EmptyForm()
     return render_template('details2.html', seq=seq, sample=sample, sam_next=sam_next, sam_prev=sam_prev, enrich_top=enrich_top, form=form)
+
+
+# if not hits:
+#   old_method
+#   grab necessary columns
+#   store in Enchace
+#   return 
+#
+# enrich_old = db.session.query(Enrich, Chems).join(Chems, Enrich.bb == Chems.bb).\
+#    filter(Enrich.sample == sam).order_by('rank').limit(20)
+#
+# enrich_top = []
+# for hit in enrich_old:
+#    enrich_top.append({'bb': hit.bb, 'enrich': hit.enrich, 'smi': chem.smi})
+
+
 
 @bp.route('/sample/<sam>')
 @login_required
