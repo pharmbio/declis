@@ -131,7 +131,7 @@ def rankdata(dat):
     return newarray
 
 
-@bp.route('/simple/<sam>')
+@bp.route('/sample/<sam>')
 @login_required
 def simres(sam):
     sample  = Sample.query.filter_by(id=sam).first_or_404()
@@ -144,8 +144,7 @@ def simres(sam):
     sam_next = sam_list[sam_pos+1] if int(sam) < max(sam_list) else 0
     sam_prev = sam_list[sam_pos-1] if int(sam) > min(sam_list) else 0
     form = EmptyForm()
-    return render_template('details2.html', seq=seq, sample=sample, sam_next=sam_next, sam_prev=sam_prev, enrich_top=enrich_top, form=form)
-
+    return render_template('details.html', seq=seq, sample=sample, sam_next=sam_next, sam_prev=sam_prev, enrich_top=enrich_top, form=form)
 
 # if not hits:
 #   old_method
@@ -159,30 +158,6 @@ def simres(sam):
 # enrich_top = []
 # for hit in enrich_old:
 #    enrich_top.append({'bb': hit.bb, 'enrich': hit.enrich, 'smi': chem.smi})
-
-
-
-@bp.route('/sample/<sam>')
-@login_required
-def samres(sam):
-    sample  = Sample.query.filter_by(id=sam).first_or_404()
-    seq     = Seq.query.filter_by(id=sample.seq_id).first_or_404()
-    samples = Sample.query.filter_by(seq_id=seq.id).all()
-
-    # enrich_top = Enrich.query.filter_by(sample=sam).order_by('rank').limit(20)
-    # enrich_top = Enrich.query.join(Chems, Enrich.bb == Chems.bb).\
-    #    filter(Enrich.sample == sam).order_by('rank').limit(20)
-    # enrich_top = Enrich.query.join(Chems, Enrich.bb == Chems.bb).\
-    #    filter(Enrich.sample == sam).add_columns(Chems.smi).order_by('rank').limit(20)
-    enrich_top = db.session.query(Enrich, Chems).join(Chems, Enrich.bb == Chems.bb).\
-        filter(Enrich.sample == sam).order_by('rank').limit(20)
-
-    sam_list = [x.id for x in samples]
-    sam_pos  = sam_list.index(int(sam))
-    sam_next = sam_list[sam_pos+1] if int(sam) < max(sam_list) else 0
-    sam_prev = sam_list[sam_pos-1] if int(sam) > min(sam_list) else 0
-    form = EmptyForm()
-    return render_template('details.html', seq=seq, sample=sample, sam_next=sam_next, sam_prev=sam_prev, enrich_top=enrich_top, form=form)
 
 
 @bp.route('/seq/<sid>')

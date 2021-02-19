@@ -60,7 +60,7 @@
       </tr>
     </table>
     <br><h2>Raw Results</h2>
-    
+
     {% include '_img_pair.html' %}
 
     {% if enrich_top.count() %}
@@ -92,7 +92,7 @@
     {% if enrich_top.count() %}
     <br><h2>Top Hits</h2>
     <table width="100%" border=1>
-      {% for hit,chem in enrich_top %}
+      {% for hit in enrich_top %}
       <tr>
         <td>
           <table class="table table-condensed">
@@ -106,15 +106,11 @@
             </tr>
             <tr>
               <td>Smiles</td>
-              <td>{{ chem.smi }}</td>
+              <td>{{ hit.smi }}</td>
             </tr>
           </table>
         </td>
-        {% if hit.b1 > 150 %}
-        <td><img src="{{ "/static/chem/{}/{}_{}_{}.png".format(hit.b1,hit.b1,hit.b2,hit.b3) }}"></td>
-        {% else %}
-        <td><img src="{{ "/static/chem/{}_{}_{}.png".format(hit.b1,hit.b2,hit.b3) }}"></td>
-        {% endif %}
+        <td><img src="{{ "/static/chem/{}/{}.png".format(hit.bb[:3],hit.bb) }}"></td>
       </tr>
       {% endfor %}
     </table>
