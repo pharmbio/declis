@@ -21,13 +21,16 @@ def before_request():
 @login_required
 def index():
     # seqs = Seq.query.all()
-    return render_template('index.html', title='Home')
+    seq = Seq.query.order_by(Seq.id.desc()).first()
+    return render_template('index.html', title='Home', seq=seq)
 
 
 @bp.route('/sequencing')
 @login_required
 def results():
-    seqs = Seq.query.all()
+    # seqs = Seq.query.all()
+    # TODO: filter on status
+    seqs = Seq.query.filter(Seq.id > 5).all()
     return render_template('seqruns.html', title='Results', seqs=seqs)
 
 
