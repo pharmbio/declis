@@ -26,6 +26,8 @@ Mako==1.1.3
 MarkupSafe==1.1.1
 matplotlib==3.2.1
 numpy==1.18.1
+pandas
+plotly
 PyJWT==1.7.1
 pyparsing==2.4.7
 python-dateutil==2.8.1
