@@ -7,4 +7,3 @@ logs/
 .bash_history
 data/
 app/static
-cli/
